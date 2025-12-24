@@ -1,0 +1,67 @@
+@use '../../styles/theme' as theme;
+
+:host {
+  display: block;
+}
+
+.presence {
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-4;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: theme.$space-3;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  color: theme.$color-muted;
+  letter-spacing: 0.6px;
+  font-size: 12px;
+  margin: 0;
+}
+
+h1 {
+  margin: 0;
+}
+
+.hint {
+  color: theme.$color-muted;
+  margin: theme.$space-2 0 0 0;
+}
+
+.ghost {
+  padding: theme.$space-3 theme.$space-4;
+  border-radius: theme.$radius-sm;
+  border: 1px solid theme.$color-border;
+  background: theme.$color-surface-2;
+  color: theme.$color-text;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: theme.$space-3;
+}
+
+.card {
+  padding: theme.$space-3;
+  border-radius: theme.$radius;
+  background: theme.$color-surface;
+  border: 1px solid theme.$color-border;
+  box-shadow: theme.$shadow;
+}
+
+.label {
+  font-weight: 700;
+}
+
+.meta {
+  color: theme.$color-muted;
+  margin-top: theme.$space-1;
+}

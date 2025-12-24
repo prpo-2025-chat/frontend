@@ -1,0 +1,25 @@
+@use './styles/theme' as theme;
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: theme.$color-bg;
+  color: theme.$color-text;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, textarea {
+  font: inherit;
+}
+
+* {
+  box-sizing: border-box;
+}

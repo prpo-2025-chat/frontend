@@ -1,0 +1,105 @@
+@use '../../styles/theme' as theme;
+
+:host {
+  display: block;
+}
+
+.media {
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-4;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: theme.$space-3;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  color: theme.$color-muted;
+  letter-spacing: 0.6px;
+  font-size: 12px;
+  margin: 0;
+}
+
+h1 {
+  margin: 0;
+}
+
+.hint {
+  color: theme.$color-muted;
+  margin: theme.$space-2 0 0 0;
+}
+
+.ghost {
+  padding: theme.$space-3 theme.$space-4;
+  border-radius: theme.$radius-sm;
+  border: 1px solid theme.$color-border;
+  background: theme.$color-surface-2;
+  color: theme.$color-text;
+}
+
+.panel {
+  background: theme.$color-surface;
+  border: 1px solid theme.$color-border;
+  border-radius: theme.$radius;
+  padding: theme.$space-4;
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-3;
+  box-shadow: theme.$shadow;
+}
+
+.upload {
+  display: flex;
+  align-items: center;
+  gap: theme.$space-3;
+  flex-wrap: wrap;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-2;
+  color: theme.$color-muted;
+}
+
+input[type="file"] {
+  color: theme.$color-text;
+}
+
+button {
+  padding: theme.$space-3 theme.$space-4;
+  border-radius: theme.$radius-sm;
+  border: 1px solid theme.$color-accent;
+  background: linear-gradient(135deg, theme.$color-accent, #9bb8ff);
+  color: #0a0b0f;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.library {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: theme.$space-3;
+}
+
+.item {
+  padding: theme.$space-3;
+  border-radius: theme.$radius-sm;
+  background: theme.$color-surface-2;
+  border: 1px dashed theme.$color-border;
+}
+
+.label {
+  font-weight: 700;
+}
+
+.meta {
+  color: theme.$color-muted;
+  margin-top: theme.$space-1;
+}

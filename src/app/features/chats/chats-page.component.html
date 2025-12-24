@@ -1,0 +1,69 @@
+<section class="chats">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Conversations</p>
+      <h1>Chats hub</h1>
+      <p class="hint">DMs and group chats powered by the Server and Message services.</p>
+    </div>
+    <a routerLink="/search" class="ghost">Search messages</a>
+  </header>
+
+  <div class="grid">
+    <div class="panel">
+      <header>
+        <div>
+          <p class="eyebrow">Direct messages</p>
+          <h2>DMs</h2>
+        </div>
+        <a routerLink="/users" class="ghost">Find users</a>
+      </header>
+      <ul class="list">
+        <li>
+          <div class="name">Alice</div>
+          <div class="meta">Last activity via Presence service</div>
+        </li>
+        <li>
+          <div class="name">Bob</div>
+          <div class="meta">Notifications arrive via STOMP</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <header>
+        <div>
+          <p class="eyebrow">Group spaces</p>
+          <h2>Group chats</h2>
+        </div>
+        <button type="button">Create</button>
+      </header>
+
+      <div class="create">
+        <p class="hint">Create a group chat through the Server service and invite users.</p>
+        <label>
+          <span>Group name</span>
+          <input type="text" placeholder="Project Alpha" />
+        </label>
+        <label>
+          <span>Add members</span>
+          <input type="text" placeholder="Search users to add" />
+        </label>
+        <div class="actions">
+          <button type="button">Add user</button>
+          <button type="button" class="primary">Create group chat</button>
+        </div>
+      </div>
+
+      <ul class="list">
+        <li>
+          <div class="name">Design Squad</div>
+          <div class="meta">Media uploads handled by Media service</div>
+        </li>
+        <li>
+          <div class="name">Backend Team</div>
+          <div class="meta">Search powered by Search service</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>

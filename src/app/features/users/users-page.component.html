@@ -1,0 +1,46 @@
+<section class="users">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">User service</p>
+      <h1>Users</h1>
+      <p class="hint">Directory and profile placeholders. Wire to the User microservice later.</p>
+    </div>
+    <a routerLink="/chats" class="ghost">Back to chats</a>
+  </header>
+
+  <div class="layout">
+    <aside class="list">
+      <div class="item active">
+        <div class="name">Jane Doe</div>
+        <div class="meta">Online · Managed by Presence service</div>
+      </div>
+      <div class="item">
+        <div class="name">John Smith</div>
+        <div class="meta">Offline · Notifications muted</div>
+      </div>
+      <div class="item">
+        <div class="name">Mia Lee</div>
+        <div class="meta">Away · Last seen 2h ago</div>
+      </div>
+    </aside>
+
+    <article class="detail">
+      <h2>User detail</h2>
+      <p class="hint">Show profile info, presence timeline, and media references here.</p>
+      <div class="cards">
+        <div class="card">
+          <div class="label">Account</div>
+          <p>Email, display name, and status from User service.</p>
+        </div>
+        <div class="card">
+          <div class="label">Memberships</div>
+          <p>DMs and group chats fetched from Server service.</p>
+        </div>
+        <div class="card">
+          <div class="label">Files</div>
+          <p>Recent uploads via Media service.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

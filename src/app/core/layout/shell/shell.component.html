@@ -1,0 +1,30 @@
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="title">PRPO Chat Frontend</div>
+      <div class="subtitle">Angular 17 · Microservices-ready</div>
+    </div>
+    <nav class="top-actions">
+      <a routerLink="/auth" class="ghost">Login / Register</a>
+      <a routerLink="/chats" class="primary">Open chats</a>
+    </nav>
+  </header>
+
+  <div class="body">
+    <aside class="sidebar">
+      <div class="section-label">Navigate</div>
+      <ul>
+        <li *ngFor="let link of navLinks">
+          <a [routerLink]="link.path" routerLinkActive="active">
+            <div class="label">{{ link.label }}</div>
+            <div class="description">{{ link.description }}</div>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

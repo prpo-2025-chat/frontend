@@ -1,0 +1,34 @@
+<section class="notifications">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Notification service</p>
+      <h1>Notifications</h1>
+      <p class="hint">STOMP/WebSocket placeholders for new message and activity alerts.</p>
+    </div>
+    <a routerLink="/chats" class="ghost">Back to chats</a>
+  </header>
+
+  <div class="panel">
+    <div class="row">
+      <div class="card">
+        <div class="label">STOMP endpoint</div>
+        <p class="meta">Configure the endpoint and topics once backend URLs are available.</p>
+      </div>
+      <div class="card">
+        <div class="label">Subscriptions</div>
+        <p class="meta">Subscribe per user, per chat, or global feed for mentions.</p>
+      </div>
+    </div>
+
+    <div class="stream">
+      <div class="event">
+        <div class="title">New message</div>
+        <p class="meta">Incoming event rendered here after wiring STOMP client.</p>
+      </div>
+      <div class="event">
+        <div class="title">User joined group</div>
+        <p class="meta">Use Presence and Server services to show membership changes.</p>
+      </div>
+    </div>
+  </div>
+</section>

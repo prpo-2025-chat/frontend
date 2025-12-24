@@ -1,0 +1,16 @@
+{
+  "api": {
+    "userService": "http://localhost:8081",
+    "serverService": "http://localhost:8082",
+    "messageService": "http://localhost:8083",
+    "mediaService": "http://localhost:8084",
+    "presenceService": "http://localhost:8085",
+    "searchService": "http://localhost:8086",
+    "notificationService": "http://localhost:8087",
+    "encryptionService": "http://localhost:8088"
+  },
+  "websocket": {
+    "notificationStompUrl": "ws://localhost:8087/ws",
+    "notificationTopic": "/topic/notifications"
+  }
+}
