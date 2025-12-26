@@ -3,42 +3,55 @@
     <header>
       <p class="eyebrow">Access required</p>
       <h1>Login or Register</h1>
-      <p class="hint">
-        Connect with the User service to authenticate. This page is intentionally simple; wire up form submits and
-        guards once backend endpoints are ready.
-      </p>
+      <p class="hint">All requests call the User API; navigation happens only after a successful response.</p>
     </header>
 
-    <div class="forms">
-      <form class="card">
-        <h2>Login</h2>
-        <label>
-          <span>Email</span>
-          <input type="email" placeholder="you@example.com" />
-        </label>
-        <label>
-          <span>Password</span>
-          <input type="password" placeholder="••••••••" />
-        </label>
-        <button type="button" routerLink="/chats">Continue</button>
-      </form>
+    <ng-container *ngIf="(user$ | async) as user; else authForms">
+      <div class="card">
+        <h2>Signed in</h2>
+        <p>You are signed in as <strong>{{ user.username }}</strong>.</p>
+        <button type="button" (click)="logout()">Log out</button>
+      </div>
+    </ng-container>
 
-      <form class="card">
-        <h2>Register</h2>
-        <label>
-          <span>Email</span>
-          <input type="email" placeholder="you@example.com" />
-        </label>
-        <label>
-          <span>Display name</span>
-          <input type="text" placeholder="Jane Doe" />
-        </label>
-        <label>
-          <span>Password</span>
-          <input type="password" placeholder="Create a password" />
-        </label>
-        <button type="button" routerLink="/chats">Create account</button>
-      </form>
-    </div>
+    <ng-template #authForms>
+      <div class="forms">
+        <form class="card" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+          <h2>Login</h2>
+          <label>
+            <span>Username</span>
+            <input type="text" formControlName="username" placeholder="jane_doe" />
+          </label>
+          <label>
+            <span>Password</span>
+            <input type="password" formControlName="password" placeholder="Create a password" />
+          </label>
+          <button type="submit" [disabled]="loginPending || loginForm.invalid">
+            {{ loginPending ? 'Signing in...' : 'Continue' }}
+          </button>
+        </form>
+
+        <form class="card" [formGroup]="registerForm" (ngSubmit)="submitRegister()">
+          <h2>Register</h2>
+          <label>
+            <span>Email</span>
+            <input type="email" formControlName="email" placeholder="you@example.com" />
+          </label>
+          <label>
+            <span>Username</span>
+            <input type="text" formControlName="username" placeholder="jane_doe" />
+          </label>
+          <label>
+            <span>Password</span>
+            <input type="password" formControlName="password" placeholder="Create a password" />
+          </label>
+          <button type="submit" [disabled]="registerPending || registerForm.invalid">
+            {{ registerPending ? 'Creating...' : 'Create account' }}
+          </button>
+        </form>
+      </div>
+    </ng-template>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
   </div>
 </section>

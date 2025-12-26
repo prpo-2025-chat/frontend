@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthStore } from '@app/core/state/auth.store';
+
 
 type NavLink = {
   path: string;
@@ -16,6 +18,10 @@ type NavLink = {
   styleUrl: './shell.component.scss'
 })
 export class ShellComponent {
+  private readonly authStore = inject(AuthStore);
+  private readonly router = inject(Router);
+
+  readonly user$ = this.authStore.user$;
   readonly navLinks: NavLink[] = [
     { path: '/chats', label: 'Chats', description: 'DMs and group chats' },
     { path: '/users', label: 'Users', description: 'Directory and profiles' },
@@ -24,4 +30,9 @@ export class ShellComponent {
     { path: '/notifications', label: 'Notifications', description: 'STOMP stream' },
     { path: '/presence', label: 'Presence', description: 'Who is online' }
   ];
+
+  logout() {
+    this.authStore.clear();
+    this.router.navigate(['/auth']);
+  }
 }

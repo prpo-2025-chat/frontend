@@ -16,6 +16,13 @@
   justify-content: space-between;
   gap: theme.$space-4;
   flex-wrap: wrap;
+  position: relative;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: theme.$space-3;
 }
 
 .eyebrow {
@@ -26,7 +33,8 @@
   margin: 0;
 }
 
-h1, h2 {
+h1,
+h2 {
   margin: 0;
 }
 
@@ -35,7 +43,8 @@ h1, h2 {
   margin: theme.$space-2 0 0 0;
 }
 
-.ghost, button {
+.ghost,
+button {
   padding: theme.$space-3 theme.$space-4;
   border-radius: theme.$radius-sm;
   border: 1px solid theme.$color-border;
@@ -49,11 +58,19 @@ button.primary {
   background: linear-gradient(135deg, theme.$color-accent, #9bb8ff);
   color: #0a0b0f;
   font-weight: 700;
+  box-shadow: 0 10px 25px rgba(122, 162, 247, 0.25);
 }
 
-.grid {
+.layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: minmax(300px, 360px) 1fr;
+  gap: theme.$space-4;
+  align-items: start;
+}
+
+.lists {
+  display: flex;
+  flex-direction: column;
   gap: theme.$space-4;
 }
 
@@ -76,14 +93,60 @@ button.primary {
   flex-wrap: wrap;
 }
 
-.create {
+.layout .panel {
+  margin: 0;
+}
+
+.popover-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 5;
+}
+
+.popover {
+  position: absolute;
+  right: 0;
+  top: calc(100% + theme.$space-3);
+  width: min(460px, calc(100vw - 40px));
+  background: theme.$color-surface;
+  border: 1px solid theme.$color-border;
+  border-radius: theme.$radius;
+  box-shadow: theme.$shadow;
+  padding: theme.$space-4;
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-4;
+  z-index: 6;
+}
+
+.popover header h3 {
+  margin: 0;
+}
+
+.create-form {
   display: flex;
   flex-direction: column;
   gap: theme.$space-3;
-  background: theme.$color-surface-2;
-  border: 1px dashed theme.$color-border;
-  border-radius: theme.$radius;
+}
+
+.type-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: theme.$space-2;
+}
+
+.type-toggle button {
   padding: theme.$space-3;
+  border-radius: theme.$radius-sm;
+  border: 1px solid theme.$color-border;
+  background: theme.$color-surface-2;
+  color: theme.$color-text;
+}
+
+.type-toggle button.active {
+  border-color: theme.$color-accent;
+  box-shadow: 0 10px 25px rgba(122, 162, 247, 0.2);
 }
 
 label {
@@ -93,18 +156,81 @@ label {
   color: theme.$color-muted;
 }
 
-input {
+input,
+textarea {
   padding: theme.$space-3;
   border-radius: theme.$radius-sm;
   border: 1px solid theme.$color-border;
   background: theme.$color-bg;
   color: theme.$color-text;
+  width: 100%;
 }
 
-.actions {
+textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.user-search {
   display: flex;
-  gap: theme.$space-3;
+  flex-direction: column;
+  gap: theme.$space-2;
+}
+
+.user-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-2;
+}
+
+.user-results li {
+  padding: theme.$space-3;
+  border-radius: theme.$radius-sm;
+  border: 1px solid theme.$color-border;
+  background: theme.$color-surface-2;
+  cursor: pointer;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: theme.$space-2;
+  padding: theme.$space-2 theme.$space-3;
+  border-radius: 999px;
+  background: theme.$color-surface-2;
+  border: 1px solid theme.$color-border;
+  width: fit-content;
+}
+
+.pill button {
+  border: none;
+  background: transparent;
+  color: theme.$color-text;
+  cursor: pointer;
+  padding: 0 theme.$space-1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: theme.$space-2;
   flex-wrap: wrap;
+}
+
+.state {
+  padding: theme.$space-3;
+  border-radius: theme.$radius-sm;
+  border: 1px solid theme.$color-border;
+  background: theme.$color-surface-2;
+  color: theme.$color-text;
+}
+
+.state.error {
+  border-color: theme.$color-danger;
+  color: theme.$color-danger;
 }
 
 .list {
@@ -121,6 +247,18 @@ input {
   border-radius: theme.$radius;
   background: theme.$color-surface-2;
   border: 1px solid theme.$color-border;
+  cursor: pointer;
+  transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.list li:hover {
+  border-color: theme.$color-accent;
+  transform: translateY(-2px);
+}
+
+.list li.active {
+  border-color: theme.$color-accent;
+  box-shadow: 0 10px 25px rgba(122, 162, 247, 0.1);
 }
 
 .name {
@@ -131,4 +269,202 @@ input {
   color: theme.$color-muted;
   font-size: 13px;
   margin-top: theme.$space-1;
+}
+
+.subtle {
+  color: theme.$color-muted;
+}
+
+.chat-panel {
+  background: theme.$color-surface;
+  border: 1px solid theme.$color-border;
+  border-radius: theme.$radius;
+  padding: theme.$space-4;
+  box-shadow: theme.$shadow;
+  min-height: 520px;
+   /* Prevent infinite growth; leave room for header/nav */
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-4;
+  overflow: hidden;
+}
+
+.chat-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: theme.$space-3;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: theme.$color-surface-2;
+  border: 1px solid theme.$color-border;
+  border-radius: theme.$radius-sm;
+  padding: theme.$space-2 theme.$space-3;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  color: theme.$color-text;
+}
+
+.chat-placeholder {
+  border: 1px dashed theme.$color-border;
+  border-radius: theme.$radius;
+  padding: theme.$space-4;
+  background: theme.$color-surface-2;
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-2;
+}
+
+.chat-placeholder .title {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-2;
+  padding: theme.$space-3;
+  border: 1px solid theme.$color-border;
+  border-radius: theme.$radius;
+  background: theme.$color-surface-2;
+}
+
+.message {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.message.own {
+  justify-content: flex-end;
+}
+
+.bubble {
+  max-width: 70%;
+  padding: theme.$space-3;
+  border-radius: theme.$radius;
+  background: theme.$color-surface;
+  border: 1px solid theme.$color-border;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.message.own .bubble {
+  background: linear-gradient(135deg, theme.$color-accent, #9bb8ff);
+  color: #0a0b0f;
+  border-color: transparent;
+}
+
+.meta-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: theme.$color-muted;
+  margin-bottom: theme.$space-1;
+}
+
+.message.own .meta-line {
+  color: rgba(10, 11, 15, 0.7);
+}
+
+.content {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.state.inline {
+  align-self: center;
+}
+
+.composer {
+  display: flex;
+  gap: theme.$space-2;
+  align-items: center;
+  padding: theme.$space-2;
+  border: 1px solid theme.$color-border;
+  border-radius: theme.$radius;
+  background: theme.$color-surface-2;
+}
+
+.composer input {
+  flex: 1;
+  padding: theme.$space-3;
+  border-radius: theme.$radius-sm;
+  border: 1px solid theme.$color-border;
+  background: theme.$color-bg;
+  color: theme.$color-text;
+}
+
+.manage {
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-3;
+  padding: theme.$space-3;
+  border: 1px solid theme.$color-border;
+  border-radius: theme.$radius;
+  background: theme.$color-surface-2;
+  position: relative;
+}
+
+.manage-header h3 {
+  margin: 0;
+}
+
+.manage-popover {
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-3;
+  margin-top: theme.$space-2;
+  padding: theme.$space-3;
+  border: 1px solid theme.$color-border;
+  border-radius: theme.$radius;
+  background: theme.$color-surface;
+  box-shadow: theme.$shadow;
+}
+
+.member-form {
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-2;
+}
+
+.member-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: theme.$space-2;
+}
+
+.member-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: theme.$space-2;
+  padding: theme.$space-3;
+  border-radius: theme.$radius-sm;
+  border: 1px solid theme.$color-border;
+  background: theme.$color-surface;
+}
+
+.member-actions {
+  display: flex;
+  gap: theme.$space-2;
+}
+
+.ghost.danger {
+  border-color: theme.$color-danger;
+  color: theme.$color-danger;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
 }

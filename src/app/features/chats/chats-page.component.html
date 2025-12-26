@@ -3,67 +3,292 @@
     <div>
       <p class="eyebrow">Conversations</p>
       <h1>Chats hub</h1>
-      <p class="hint">DMs and group chats powered by the Server and Message services.</p>
+      <p class="hint">DMs and group chats pulled from the Server service.</p>
     </div>
-    <a routerLink="/search" class="ghost">Search messages</a>
+    <div class="header-actions">
+      <button type="button" class="primary" (click)="toggleCreatePopover()">New chat</button>
+      <a routerLink="/search" class="ghost">Search messages</a>
+    </div>
+    <div class="popover-backdrop" *ngIf="createOpen" (click)="toggleCreatePopover()"></div>
+    <div class="popover" *ngIf="createOpen" (click)="$event.stopPropagation()">
+      <header>
+        <div>
+          <p class="eyebrow">Start a chat</p>
+          <h3>Create server</h3>
+        </div>
+      </header>
+      <form [formGroup]="createForm" (ngSubmit)="createChat()" class="create-form">
+        <div class="type-toggle">
+          <button
+            type="button"
+            [class.active]="createForm.controls.type.value === ServerType.DM"
+            (click)="setType(ServerType.DM)"
+          >
+            Direct message
+          </button>
+          <button
+            type="button"
+            [class.active]="createForm.controls.type.value === ServerType.GROUP"
+            (click)="setType(ServerType.GROUP)"
+          >
+            Group chat
+          </button>
+        </div>
+
+        <label>
+          <span>Chat name</span>
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Project Alpha or Username"
+            [disabled]="createPending"
+          />
+        </label>
+
+        <label>
+          <span>About (optional)</span>
+          <textarea
+            rows="2"
+            formControlName="bio"
+            placeholder="Short description for the chat"
+            [disabled]="createPending"
+          ></textarea>
+        </label>
+
+        <div class="user-search" *ngIf="createForm.controls.type.value === ServerType.DM">
+          <label>
+            <span>Find user</span>
+            <input
+              type="text"
+              formControlName="userQuery"
+              placeholder="Search by username"
+              [disabled]="createPending"
+            />
+          </label>
+
+          <div class="pill" *ngIf="selectedUser">
+            <span>{{ selectedUser.displayName || selectedUser.username }}</span>
+            <button type="button" (click)="clearSelectedUser()" aria-label="Remove selected user">x</button>
+          </div>
+
+          <div class="state" *ngIf="searchingUsers">Searching...</div>
+          <ng-container *ngIf="!searchingUsers">
+            <p class="hint" *ngIf="userResults.length === 0 && createForm.controls.userQuery.value">
+              No users found for that search.
+            </p>
+            <ul class="user-results" *ngIf="userResults.length > 0">
+              <li *ngFor="let user of userResults" (click)="selectUser(user)">
+                <div class="name">{{ user.displayName || user.username }}</div>
+                <div class="meta">ID: {{ user.id }}</div>
+              </li>
+            </ul>
+          </ng-container>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="ghost" (click)="toggleCreatePopover()" [disabled]="createPending">
+            Cancel
+          </button>
+          <button type="submit" class="primary" [disabled]="createPending">
+            {{ createPending ? 'Creating...' : 'Create chat' }}
+          </button>
+        </div>
+      </form>
+    </div>
   </header>
 
-  <div class="grid">
-    <div class="panel">
-      <header>
-        <div>
-          <p class="eyebrow">Direct messages</p>
-          <h2>DMs</h2>
-        </div>
-        <a routerLink="/users" class="ghost">Find users</a>
-      </header>
-      <ul class="list">
-        <li>
-          <div class="name">Alice</div>
-          <div class="meta">Last activity via Presence service</div>
-        </li>
-        <li>
-          <div class="name">Bob</div>
-          <div class="meta">Notifications arrive via STOMP</div>
-        </li>
-      </ul>
-    </div>
+  <div class="layout">
+    <div class="lists">
+      <div class="panel">
+        <header>
+          <div>
+            <p class="eyebrow">Direct messages</p>
+            <h2>DMs</h2>
+          </div>
+          <a routerLink="/users" class="ghost">Find users</a>
+        </header>
 
-    <div class="panel">
-      <header>
-        <div>
-          <p class="eyebrow">Group spaces</p>
-          <h2>Group chats</h2>
-        </div>
-        <button type="button">Create</button>
-      </header>
-
-      <div class="create">
-        <p class="hint">Create a group chat through the Server service and invite users.</p>
-        <label>
-          <span>Group name</span>
-          <input type="text" placeholder="Project Alpha" />
-        </label>
-        <label>
-          <span>Add members</span>
-          <input type="text" placeholder="Search users to add" />
-        </label>
-        <div class="actions">
-          <button type="button">Add user</button>
-          <button type="button" class="primary">Create group chat</button>
-        </div>
+        <div *ngIf="loading" class="state">Loading your chats...</div>
+        <div *ngIf="!loading && errorMessage" class="state error">{{ errorMessage }}</div>
+        <ng-container *ngIf="!loading && !errorMessage">
+          <ng-container *ngIf="dmServers as dmServers">
+            <p class="hint" *ngIf="dmServers.length === 0">No DMs yet.</p>
+            <ul class="list">
+              <li
+                *ngFor="let server of dmServers; trackBy: trackByServerId"
+                (click)="openServer(server.id)"
+                [class.active]="selectedServerId === server.id"
+              >
+                <div class="name">{{ server.name }}</div>
+                <div class="meta">Direct message</div>
+              </li>
+            </ul>
+          </ng-container>
+        </ng-container>
       </div>
 
-      <ul class="list">
-        <li>
-          <div class="name">Design Squad</div>
-          <div class="meta">Media uploads handled by Media service</div>
-        </li>
-        <li>
-          <div class="name">Backend Team</div>
-          <div class="meta">Search powered by Search service</div>
-        </li>
-      </ul>
+      <div class="panel">
+        <header>
+          <div>
+            <p class="eyebrow">Group spaces</p>
+            <h2>Group chats</h2>
+          </div>
+          <span class="ghost subtle">Server service</span>
+        </header>
+
+        <div *ngIf="loading" class="state">Loading your servers...</div>
+        <div *ngIf="!loading && errorMessage" class="state error">{{ errorMessage }}</div>
+        <ng-container *ngIf="!loading && !errorMessage">
+          <ng-container *ngIf="groupServers as groupServers">
+            <p class="hint" *ngIf="groupServers.length === 0">No group chats yet.</p>
+            <ul class="list">
+              <li
+                *ngFor="let server of groupServers; trackBy: trackByServerId"
+                (click)="openServer(server.id)"
+                [class.active]="selectedServerId === server.id"
+              >
+                <div class="name">{{ server.name }}</div>
+                <div class="meta">
+                  {{ server.profile?.bio || 'Group created via Server service' }}
+                </div>
+              </li>
+            </ul>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="chat-panel">
+      <ng-container *ngIf="selectedServer as server; else emptyChat">
+        <div class="chat-header">
+          <div>
+            <p class="eyebrow">{{ server.type === 'DM' ? 'Direct message' : 'Group chat' }}</p>
+            <h2>{{ server.name }}</h2>
+            <p class="meta" *ngIf="server.profile?.bio">{{ server.profile?.bio }}</p>
+          </div>
+          <span class="tag">{{ server.type }}</span>
+        </div>
+
+        <div class="manage" *ngIf="server.type === ServerType.GROUP">
+          <div class="manage-header">
+            <div>
+              <p class="eyebrow">Server controls</p>
+              <h3>Members</h3>
+            </div>
+            <button type="button" class="ghost" (click)="toggleManage()">
+              {{ manageOpen ? 'Hide' : 'Manage' }}
+            </button>
+          </div>
+
+          <div class="manage-popover" *ngIf="manageOpen">
+            <form [formGroup]="memberForm" (ngSubmit)="addMember(server.id)" class="member-form">
+              <label>
+                <span>Add member</span>
+                <input
+                  type="text"
+                  formControlName="userQuery"
+                  placeholder="Search users to add"
+                  [disabled]="addMemberPending"
+                />
+              </label>
+              <div class="pill" *ngIf="selectedMember">
+                <span>{{ selectedMember.displayName || selectedMember.username }}</span>
+                <button type="button" (click)="clearSelectedMember()" aria-label="Clear selected member">x</button>
+              </div>
+
+              <div class="state" *ngIf="searchingMembers">Searching users...</div>
+              <ng-container *ngIf="!searchingMembers">
+                <p class="hint" *ngIf="memberSearchResults.length === 0 && memberForm.controls.userQuery.value">
+                  No users found.
+                </p>
+                <ul class="user-results" *ngIf="memberSearchResults.length > 0">
+                  <li *ngFor="let user of memberSearchResults" (click)="selectMemberCandidate(user)">
+                    <div class="name">{{ user.displayName || user.username }}</div>
+                    <div class="meta">ID: {{ user.id }}</div>
+                  </li>
+                </ul>
+              </ng-container>
+
+              <div class="form-actions">
+                <button type="submit" class="primary" [disabled]="addMemberPending">
+                  {{ addMemberPending ? 'Adding...' : 'Add member' }}
+                </button>
+              </div>
+            </form>
+
+            <div class="state" *ngIf="membersLoading">Loading members...</div>
+            <ng-container *ngIf="!membersLoading">
+              <p class="hint" *ngIf="members.length === 0">No members found.</p>
+              <ul class="member-list" *ngIf="members.length > 0">
+                <li *ngFor="let member of members; trackBy: trackByUserId">
+                  <div class="member-id">{{ member }}</div>
+                  <div class="member-actions">
+                    <button
+                      type="button"
+                      class="ghost"
+                      (click)="removeMember(server.id, member)"
+                      [disabled]="banPendingUserId === member"
+                    >
+                      {{ banPendingUserId === member ? 'Removing...' : 'Remove' }}
+                    </button>
+                    <button
+                      type="button"
+                      class="ghost danger"
+                      (click)="banMember(server.id, member)"
+                      [disabled]="banPendingUserId === member"
+                    >
+                      {{ banPendingUserId === member ? 'Banning...' : 'Ban' }}
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </ng-container>
+          </div>
+        </div>
+
+        <div
+          class="messages"
+          (scroll)="onMessagesScroll($event, server.id)"
+        >
+          <div class="state" *ngIf="messagesLoading && messages.length === 0">Loading messages...</div>
+          <p class="hint" *ngIf="!messages.length && !messagesLoading">No messages yet.</p>
+          <div
+            class="message"
+            *ngFor="let message of messages; trackBy: trackByMessageId"
+            [class.own]="isOwnMessage(message)"
+          >
+            <div class="bubble">
+              <div class="meta-line">
+                <span class="sender">{{ message.senderId }}</span>
+                <span class="time">{{ message.dateSent | date:'short' }}</span>
+              </div>
+              <div class="content">{{ message.content }}</div>
+            </div>
+          </div>
+          <div class="state inline" *ngIf="messagesLoading && messages.length">Loading more...</div>
+          <p class="hint" *ngIf="messagesLastPage && messages.length">No more messages.</p>
+        </div>
+
+        <form class="composer" [formGroup]="sendForm" (ngSubmit)="sendMessage(server.id)">
+          <input
+            type="text"
+            formControlName="content"
+            placeholder="Message {{ server.name }}"
+            [disabled]="sendPending"
+          />
+          <button type="submit" class="primary" [disabled]="sendPending">
+            {{ sendPending ? 'Sending...' : 'Send' }}
+          </button>
+        </form>
+      </ng-container>
+
+      <ng-template #emptyChat>
+        <div class="chat-placeholder">
+          <div class="title">Pick a chat</div>
+          <p class="hint">Choose a DM or group on the left to open its conversation.</p>
+          <p class="meta">We keep DMs and group servers separated for clarity.</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 </section>

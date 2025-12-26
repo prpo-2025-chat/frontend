@@ -7,6 +7,7 @@ import { SearchPageComponent } from './features/search/search-page.component';
 import { NotificationsPageComponent } from './features/notifications/notifications-page.component';
 import { PresencePageComponent } from './features/presence/presence-page.component';
 import { MediaPageComponent } from './features/media/media-page.component';
+import { authGuard } from './core/state/auth.guard';
 
 export const routes: Routes = [
   {
@@ -16,11 +17,16 @@ export const routes: Routes = [
   {
     path: '',
     component: ShellComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: '',
         redirectTo: 'chats',
         pathMatch: 'full'
+      },
+      {
+        path: 'chats/:serverId',
+        component: ChatsPageComponent
       },
       {
         path: 'chats',

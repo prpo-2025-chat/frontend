@@ -1,11 +1,14 @@
 <div class="shell">
   <header class="topbar">
     <div class="brand">
-      <div class="title">PRPO Chat Frontend</div>
-      <div class="subtitle">Angular 17 · Microservices-ready</div>
+      <div class="title">Adaran</div>
+      <div class="subtitle">PRPO project 2025/26</div>
     </div>
     <nav class="top-actions">
-      <a routerLink="/auth" class="ghost">Login / Register</a>
+      <a *ngIf="(user$ | async) as user; else authLink" class="ghost" (click)="logout()">Logout {{ user.username }}</a>
+      <ng-template #authLink>
+        <a routerLink="/auth" class="ghost">Login / Register</a>
+      </ng-template>
       <a routerLink="/chats" class="primary">Open chats</a>
     </nav>
   </header>
