@@ -6,18 +6,30 @@ RUN npm ci
 COPY . .
 
 # Override API roots for containerized backends; adjust args if names/ports differ
-ARG USER_API=http://user-service:8032
-ARG SERVER_API=http://server-service:8031
-ARG MEMBERSHIP_API=http://server-service:8031
-ARG MESSAGE_API=http://message:8080
-ARG PRESENCE_API=http://presence:8081
-ARG NOTIFICATION_API=http://notification:8085
-ARG INTERNAL_NOTIFICATION_API=http://notification:8085
-ARG ENCRYPTION_API=http://encryption:8082
-ARG PASSWORD_API=http://encryption:8082
-ARG MEDIA_API=http://media:8083
-ARG SEARCH_API=http://search:8084
-ARG NOTIFICATION_WS=http://notification:8085/ws
+ARG USER_API=http://20.250.234.231
+ARG SERVER_API=http://20.250.234.231
+ARG MEMBERSHIP_API=http://20.250.234.231
+ARG MESSAGE_API=http://20.250.234.231
+ARG PRESENCE_API=http://20.250.234.231
+ARG NOTIFICATION_API=http://20.250.234.231
+ARG INTERNAL_NOTIFICATION_API=http://20.250.234.231
+ARG ENCRYPTION_API=http://20.250.234.231
+ARG PASSWORD_API=http://20.250.234.231
+ARG MEDIA_API=http://20.250.234.231
+ARG SEARCH_API=http://20.250.234.231
+ARG NOTIFICATION_WS=http://20.250.234.231/ws
+#ARG USER_API=http://user-service:8032
+#ARG SERVER_API=http://server-service:8031
+#ARG MEMBERSHIP_API=http://server-service:8031
+#ARG MESSAGE_API=http://message:8080
+#ARG PRESENCE_API=http://presence:8081
+#ARG NOTIFICATION_API=http://notification:8085
+#ARG INTERNAL_NOTIFICATION_API=http://notification:8085
+#ARG ENCRYPTION_API=http://encryption:8082
+#ARG PASSWORD_API=http://encryption:8082
+#ARG MEDIA_API=http://media:8083
+#ARG SEARCH_API=http://search:8084
+#ARG NOTIFICATION_WS=http://notification:8085/ws
 
 # Rewrite production environment to hit the services in compose
 RUN node -e "const fs=require('fs');const env={production:true,useMocks:false,apiBaseUrls:{user:'${USER_API}',server:'${SERVER_API}',membership:'${MEMBERSHIP_API}',message:'${MESSAGE_API}',presence:'${PRESENCE_API}',notification:'${NOTIFICATION_API}',internalNotification:'${INTERNAL_NOTIFICATION_API}',encryption:'${ENCRYPTION_API}',password:'${PASSWORD_API}',media:'${MEDIA_API}',search:'${SEARCH_API}'},notificationWs:'${NOTIFICATION_WS}'};fs.writeFileSync('src/environments/environment.prod.ts','export const environment = '+JSON.stringify(env,null,2)+';');"
